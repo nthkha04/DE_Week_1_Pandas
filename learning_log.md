@@ -19,3 +19,16 @@ Bài học Data Grain (Độ hạt dữ liệu): Dữ liệu thô thường bị
 Bài học Cạm bẫy Aggregation (Hệ quả của Data JOIN): Khi dataset là một bảng đã được gộp sẵn (denormalized), phải cẩn trọng với hàm sum(). Nếu tính tổng trên cột đại diện cho cả đơn hàng (payment_value), doanh thu sẽ bị nhân khống lên nhiều lần do các dòng lặp. Phải tính sum() trên cột giá trị đơn lẻ của từng item (price). Luôn kiểm tra ý nghĩa của từng cột trước khi gom nhóm.
 
 Trade-off của Pandas: Code cực nhanh, thao tác ma trận rất gọn, nhưng kiến trúc In-memory bắt buộc load tất cả lên RAM. Với file 56MB thì chạy tốt, nhưng nếu file là 50GB thì cách làm này sẽ gây sập RAM (OOM - Out of Memory).
+
+## Thứ 2 — Tuần 1 (Day 1 - ETL Pipeline hoàn chỉnh)
+
+### Đã làm:
+- Build ETL pipeline functional style end-to-end
+- Pydantic validate từng record, dead-letter → errors.csv
+- Output: top_states_revenue.parquet + monthly_growth.parquet
+
+### Bài học:
+- payment_value sai data grain vì bị nhân N lần (item-level dataset) -> use dùng sum(price) từng item
+- nunique(order_id) thay vì count() để đếm đơn hàng thực ( order lặp lại khi mua nhiều sản phẩm)
+- validate() không crash pipeline — record lỗi ghi ra errors.csv
+- Period (unsupported types) phải convert sang str trước khi ghi Parquet 
