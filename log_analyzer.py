@@ -115,7 +115,7 @@ def load_logs(log_path: str,
                 dead_letters.append(parsed)
 
     if dead_letters:
-        with open(dead_letter_path, "w", encoding="utf-8") as f:
+        with open(dead_letter_path, "a", encoding="utf-8") as f:
             for rec in dead_letters:
                 f.write(json.dumps(rec) + "\n")
         logger.warning(
