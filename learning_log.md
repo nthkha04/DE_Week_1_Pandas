@@ -32,3 +32,16 @@ Trade-off của Pandas: Code cực nhanh, thao tác ma trận rất gọn, nhưn
 - nunique(order_id) thay vì count() để đếm đơn hàng thực ( order lặp lại khi mua nhiều sản phẩm)
 - validate() không crash pipeline — record lỗi ghi ra errors.csv
 - Period (unsupported types) phải convert sang str trước khi ghi Parquet 
+
+## Thứ 3 — Tuần 1
+
+### Đã làm:
+- Refactor ETL thành modules: etl/extract.py, transform.py, load.py, config.py
+- Build Web Log Analyzer pipeline mới: parse → filter → SQLite → báo cáo
+- Pydantic mở rộng: LogRecord validate Apache log format
+
+### Bài học:
+- Refactor thành modules → sửa đúng file chịu trách nhiệm, không phải lục tìm trong notebook dài.
+- Không có config.py → path hardcode rải rác nhiều file, deploy lên server mới phải tìm từng chỗ để đổi.
+- Cả 2 đều là dead-letter — không crash pipeline. Khác nhau ở format: Olist dùng CSV vì record lỗi có structure cố định. Log Analyzer dùng JSONL vì record lỗi có 2 loại structure khác nhau(error before PARSE & after), CSV không handle được.
+- Lưu SQLite vì ngay sau đó cần query thống kê bằng SQL tức thì — Parquet không query trực tiếp được.
